@@ -1,0 +1,9 @@
+include:
+  - template/docker-compose.yml
+  - custom/docker-compose.yml
+
+networks:
+  mini-apps:
+    driver: bridge
+    name: allesnl-mini-app_network
+    external: true

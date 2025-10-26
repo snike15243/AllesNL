@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JS Command Bridge</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; }
+    button { font-size: 16px; padding: 10px 15px; border-radius: 8px; border: none; background-color: #007bff; color: white; cursor: pointer; margin-top: 10px;}
+    input { font-size: 16px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: calc(100% - 22px); margin-bottom: 10px; }
+    .group { border: 1px solid #eee; padding: 10px; margin-top: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>JS Command Bridge</h1>
+  <p>This page sends structured commands to Flutter.</p>
+
+  <div class="group">
+    <h2>User Profile</h2>
+    <input type="text" id="firstNameInput" placeholder="First Name">
+    <button onclick="sendCommand(HttpMethods.POST, 'user_profile', { firstName: document.getElementById('firstNameInput').value, lastName: 'FromWebView' })">POST User</button>
+  </div>
+
+  <div class="group">
+    <h2>Payment (Special Case)</h2>
+    <input type="number" id="amountInput" placeholder="Amount">
+    <button onclick="makePayment(parseInt(document.getElementById('amountInput').value))">POST Payment</button>
+  </div>
+
+  <div class="group">
+      <h2>Context-Aware Actions</h2>
+      <p>These buttons use the 'currentUser' object injected by Flutter.</p>
+      <button onclick="sendCommand(HttpMethods.GET, 'user_profile', { userId: window.currentUser ? window.currentUser.id : null })">GET My User Profile</button>
+      <button onclick="sendCommand(HttpMethods.UPDATE, 'user_profile', { userId: window.currentUser ? window.currentUser.id : null, newName: 'Updated Name' })">UPDATE My User Profile</button>
+      <button onclick="sendCommand(HttpMethods.DELETE, 'user_profile', { userId: window.currentUser ? window.currentUser.id : null })">DELETE My User Profile</button>
+  </div>
+
+  <p id="response-status"></p>
+
+  <script>
+    // 1. Added an "Enum" for HTTP Methods to prevent typos
+    const HttpMethods = Object.freeze({
+      POST: 'POST',
+      GET: 'GET',
+      UPDATE: 'UPDATE',
+      DELETE: 'DELETE'
+    });
+
+    function updateStatus(message, isError) {
+      const statusElement = document.getElementById('response-status');
+      const messageText = (typeof message === 'object') ? JSON.stringify(message, null, 2) : message;
+      statusElement.innerText = messageText;
+      statusElement.style.color = isError ? 'red' : 'green';
+    }
+
+    // Generic function for other commands
+    function sendCommand(method, dataType, body) {
+      const command = {
+        method: method,
+        headers: {
+          'Data-Type': dataType
+        },
+        body: body
+      };
+      const jsonString = JSON.stringify(command);
+
+      if (window.Bridge) {
+        window.Bridge.postMessage(jsonString);
+        const statusElement = document.getElementById('response-status');
+        statusElement.innerText = `Command Sent: ${method} for ${dataType}...`;
+        statusElement.style.color = 'black';
+      } else {
+        console.error('JavaScript Channel "Bridge" not found.');
+        updateStatus('Error: JavaScript Bridge not found.', true);
+      }
+    }
+
+    // Special case function specifically for making a POST payment
+    function makePayment(amount) {
+      const command = {
+        method: HttpMethods.POST, // Using the enum for consistency
+        headers: {
+          'Data-Type': 'payment'
+        },
+        body: {
+          'amount': amount
+        }
+      };
+
+      const jsonString = JSON.stringify(command);
+
+      if (window.Bridge) {
+        window.Bridge.postMessage(jsonString);
+        const statusElement = document.getElementById('response-status');
+        statusElement.innerText = `Payment Command Sent for amount: ${amount}...`;
+        statusElement.style.color = 'black';
+      } else {
+        console.error('JavaScript Channel "Bridge" not found.');
+        updateStatus('Error: JavaScript Bridge not found.', true);
+      }
+    }
+  </script>
+
+</body>
+</html>

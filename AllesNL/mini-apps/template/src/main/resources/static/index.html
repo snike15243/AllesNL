@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <title>AllesNL Template Mini-App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 0; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .container { background: white; min-height: 100vh; width: 100%; padding: 20px 16px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
+        h1 { color: #667eea; font-size: 1.75em; margin-bottom: 8px; font-weight: 700; }
+        .subtitle { color: #666; font-size: 1em; }
+        .content-section { margin: 16px 0; }
+        .card { background: #f8f9fa; border-radius: 12px; padding: 20px 16px; margin: 16px 0; transition: transform 0.2s ease; touch-action: manipulation; }
+        .card:active { transform: scale(0.98); }
+        .card h3 { color: #764ba2; margin-bottom: 12px; font-size: 1.2em; font-weight: 600; }
+        .card p { color: #555; line-height: 1.6; font-size: 0.95em; }
+        .button-group { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; padding: 0 4px; }
+        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: block; text-align: center; width: 100%; touch-action: manipulation; -webkit-user-select: none; user-select: none; min-height: 48px; }
+        .btn:active { transform: scale(0.96); opacity: 0.9; }
+        .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea; }
+        .btn-secondary:active { background: #f0f0f0; }
+        footer { text-align: center; margin-top: 32px; padding: 20px 0 24px 0; border-top: 1px solid #ddd; color: #888; font-size: 0.85em; }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+        .feature-item { text-align: center; padding: 16px 8px; background: white; border-radius: 10px; }
+        .feature-icon { font-size: 2em; margin-bottom: 8px; }
+        .feature-item strong { font-size: 0.85em; display: block; color: #333; }
+        @supports (padding: max(0px)) { .container { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-bottom: max(20px, env(safe-area-inset-bottom)); } }
+        .btn, .card h3, .feature-item { -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        html { scroll-behavior: smooth; }
+        .status-chip { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 8px 12px; font-weight: 600; }
+        .status-true { background: #e8fff3; color: #0a7c44; border: 1px solid #bdf0d3; }
+        .status-false { background: #fff1f0; color: #b42318; border: 1px solid #ffcdc7; }
+        .muted { color: #666; font-size: .9rem; }
+        input[type="text"], textarea { width: 100%; padding: 14px 12px; border: 1px solid #dfe3ea; border-radius: 10px; font-size: 1rem; outline: none; }
+        input[type="text"]:focus, textarea:focus { border-color: #667eea; }
+        .row { display: grid; gap: 12px; }
+        @media (min-width: 560px) { .row { grid-template-columns: 1fr auto; align-items: end; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🇳🇱 AllesNL Template</h1>
+        <p class="subtitle">Your Modern Mini-App Template</p>
+    </header>
+
+    <div class="content-section">
+        <div class="card">
+            <h3>✨ Welcome to AllesNL!</h3>
+            <p>This template is optimized for Android apps and shows a fluent, native like experience on your mobile device.</p>
+        </div>
+
+        <div class="card">
+            <h3>🚀 Features</h3>
+            <div class="feature-grid">
+                <div class="feature-item"><div class="feature-icon">⚡</div><strong>Quick</strong></div>
+                <div class="feature-item"><div class="feature-icon">📱</div><strong>Mobile</strong></div>
+                <div class="feature-item"><div class="feature-icon">🎨</div><strong>Modern</strong></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>💡 Get to work</h3>
+            <p>This template is specially designed for Android WebView integration. All touch interactions are optimized for a native feeling.</p>
+        </div>
+    </div>
+
+    <div class="card" id="quote-card">
+        <h3>📝 Daily Quote</h3>
+        <p id="quote-text">Loading quote...</p>
+        <p id="quote-author" style="text-align:right; font-weight:600; margin-top:8px;"></p>
+        <button class="btn btn-secondary" onclick="fetchQuote()">Get New Quote</button>
+    </div>
+
+    <!-- NEW: Enter Quote + Post to Flutter/Backend -->
+    <!-- REPLACE your old Enter Quote card with this multi-method demo -->
+    <div class="card" id="http-methods-card">
+        <h3>🧪 HTTP Methods Demo (PUT / GET / DELETE)</h3>
+        <p class="muted" style="margin-bottom:12px;">
+            These actions use the single bridge:
+            <code>sendCommand(method, dataType, body)</code>.
+            We’ll send header <code>Data-Type: "quote"</code> for all examples below.
+        </p>
+
+        <!-- POST -->
+        <div class="row" style="margin-top:10px;">
+            <div>
+                <label for="postQuoteInput" style="display:block;font-weight:600;margin-bottom:8px;">
+                    POST a quote (body: <code>{ quoteText }</code>)
+                </label>
+                <textarea id="postQuoteInput" rows="3" placeholder="Type a quote to POST…"></textarea>
+            </div>
+            <button class="btn" onclick="postQuote()">POST Quote</button>
+        </div>
+
+        <!-- GET -->
+        <div class="row" style="margin-top:14px;">
+            <div>
+                <label style="display:block;font-weight:600;margin-bottom:8px;">
+                    GET quote (no body)
+                </label>
+                <p class="muted">Sends <code>sendCommand('GET','quote', null)</code>.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="getQuote()">GET Quote</button>
+        </div>
+
+        <!-- DELETE -->
+        <div class="row" style="margin-top:14px;">
+            <div>
+                <label for="deleteIdInput" style="display:block;font-weight:600;margin-bottom:8px;">
+                    DELETE by ID (optional body: <code>{ id }</code>)
+                </label>
+                <input id="deleteIdInput" type="text" placeholder="Enter ID to delete (optional)…" />
+                <div style="margin-top:8px;">
+                    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                        <input id="deleteWithBody" type="checkbox" />
+                        <span class="muted">Send DELETE with JSON body</span>
+                    </label>
+                </div>
+            </div>
+            <button class="btn" onclick="deleteQuote()">DELETE</button>
+        </div>
+
+        <div style="margin-top:14px;">
+            <span id="response-status" class="status-chip muted">Waiting for result…</span>
+        </div>
+    </div>
+
+
+    <div class="button-group">
+        <button class="btn" onclick="handlePrimaryAction()">Primary Action</button>
+        <button class="btn btn-secondary" onclick="handleSecondaryAction()">More Info</button>
+    </div>
+
+    <h2>Payment Example</h2>
+    <button onclick="makePayment(150)">Make a 150 EUR Payment</button>
+
+
+    <div class="card" id="submit-card">
+        <h3>📤 Send Message</h3>
+        <p style="margin-bottom:12px;color:#555;">Type something and send it to the backend.</p>
+
+        <label for="messageInput" style="display:block;font-weight:600;margin-bottom:8px;">Message</label>
+        <input id="messageInput" type="text" placeholder="Type your message…" />
+
+        <button class="btn" style="margin-top:14px;" onclick="sendToBackend()">Send</button>
+
+        <pre id="submitStatus" style="margin-top:14px;padding:12px;background:#f8f9fa;border:1px solid #ebeff5;border-radius:10px;font-size:.9rem;white-space:pre-wrap;word-break:break-word;display:none;"></pre>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 AllesNL Template Mini-App | Made with ❤️</p>
+    </footer>
+</div>
+
+<script>
+    // Android WebView interface detection
+    const isAndroidWebView = typeof Android !== 'undefined';
+
+    console.log('AllesNL Template Mini-App loaded! 🎉');
+    console.log('Android WebView detected:', isAndroidWebView);
+
+    // Prevent context menu on long press
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+    // Handle primary action
+    function handlePrimaryAction() {
+        if (isAndroidWebView && typeof Android.onPrimaryAction === 'function') {
+            Android.onPrimaryAction();
+        } else {
+            alert('Hello from AllesNL! 👋');
+        }
+    }
+
+    // Handle secondary action
+    function handleSecondaryAction() {
+        if (isAndroidWebView && typeof Android.onSecondaryAction === 'function') {
+            Android.onSecondaryAction();
+        } else {
+            alert('Secondary action performed!');
+        }
+    }
+
+    // Notify Android that page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const year = new Date().getFullYear();
+        console.log(`Template loaded in ${year}`);
+        if (isAndroidWebView && typeof Android.onPageLoaded === 'function') {
+            Android.onPageLoaded();
+        }
+        fetchQuote(); // Auto-load quote
+    });
+
+    // Prevent double-tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) { event.preventDefault(); }
+        lastTouchEnd = now;
+    }, false);
+
+    async function fetchQuote() {
+        try {
+            const response = await fetch('/internal/quote');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const quote = await response.json();
+            document.getElementById('quote-text').textContent = `"${quote.quote}"`;
+            document.getElementById('quote-author').textContent = `— ${quote.author}`;
+        } catch (err) {
+            console.error('Failed to fetch quote:', err);
+            document.getElementById('quote-text').textContent = 'Failed to load quote 😞';
+            document.getElementById('quote-author').textContent = '';
+        }
+    }
+
+    // Single entry point: ALL status updates & backend payload handling happen here
+    // updateStatus(message, isError)
+    // - message can be plain text OR a JSON string/object like { message: true|false }
+    // - isError is a boolean indicating generic error state when not sending a backend payload
+    function updateStatus(body, isError) {
+        const el = document.getElementById('response-status');
+        el.classList.remove('status-true','status-false','muted');
+
+        // Try to normalize body into an object
+        let obj = body;
+        if (typeof body === 'string') {
+            try { obj = JSON.parse(body); } catch (_) { obj = body; }
+        }
+
+        // If we got an object, show it and check positivity
+        if (obj && typeof obj === 'object') {
+            // Optional: dump full body for debugging
+            const dumpEl = document.getElementById('backend-body');
+            if (dumpEl) dumpEl.textContent = JSON.stringify(obj, null, 2);
+
+            // Extract positivity flag from either "message" or "Message"
+            let flag = (obj.hasOwnProperty('message') ? obj.message
+                : obj.hasOwnProperty('Message') ? obj.Message
+                    : undefined);
+
+            let amount = obj.hasOwnProperty('amount') ? obj.amount
+                : obj.hasOwnProperty('Amount') ? obj.Amount
+                    : -1;
+            console.log("Received amount:", amount);
+
+            if (typeof flag === 'string') {
+                flag = flag.toLowerCase() === 'true';
+            } else if (typeof flag !== 'boolean') {
+                flag = undefined; // not a recognized flag
+            }
+
+            if (flag === true) {
+                el.textContent = '✅ Positive';
+                el.classList.add('status-true');
+                return;
+            }
+            if (flag === false) {
+                el.textContent = '❌ Not positive';
+                el.classList.add('status-false');
+                return;
+            }
+
+            // No positivity flag – just acknowledge
+            el.textContent = 'Response received';
+            el.classList.add(isError ? 'status-false' : 'muted');
+            return;
+        }
+
+        // Fallback: plain text
+        el.textContent = String(body);
+        el.classList.add(isError ? 'status-false' : 'muted');
+    }
+</script>
+
+
+<script>
+    // PUT example
+    function postQuote() {
+        const text = (document.getElementById('postQuoteInput').value || '').trim();
+        if (!text) {
+            updateStatus('Please enter a quote to POST.', true);
+            return;
+        }
+        try {
+            // Data-Type: "quote" | body: { quoteText }
+            sendCommand(HttpMethods.POST, 'quote', { quoteText: text });
+            updateStatus('POST sent. Awaiting backend result…', false);
+        } catch (e) {
+            console.error(e);
+            updateStatus('Failed to send POST.', true);
+        }
+    }
+
+    // GET example (no body)
+    function getQuote() {
+        try {
+            // Data-Type: "quote" | body: null
+            sendCommand(HttpMethods.GET, 'quote', null);
+            updateStatus('GET sent. Awaiting backend result…', false);
+        } catch (e) {
+            console.error(e);
+            updateStatus('Failed to send GET.', true);
+        }
+    }
+
+    // DELETE example (optional body)
+    function deleteQuote() {
+        const id = (document.getElementById('deleteIdInput').value || '').trim();
+        const withBody = document.getElementById('deleteWithBody').checked;
+
+        // If sending a body, include { id } – otherwise send null.
+        const body = withBody ? (id ? { id } : {}) : null;
+
+        try {
+            // Data-Type: "quote"
+            sendCommand(HttpMethods.DELETE, 'quote', body);
+            updateStatus('DELETE sent. Awaiting backend result…', false);
+        } catch (e) {
+            console.error(e);
+            updateStatus('Failed to send DELETE.', true);
+        }
+    }
+</script>
+
+<script>
+
+    const HttpMethods = Object.freeze({
+        POST: 'POST',
+        GET: 'GET',
+        DELETE: 'DELETE'
+    });
+
+    // Generic function for other commands
+    function sendCommand(method, dataType, body) {
+        const command = {
+            method: method,
+            headers: {
+                'Data-Type': dataType
+            },
+            body: body
+        };
+        const jsonString = JSON.stringify(command);
+
+        if (window.Bridge) {
+            window.Bridge.postMessage(jsonString);
+        } else {
+            console.error('JavaScript Channel "Bridge" not found.');
+            updateStatus('Error: JavaScript Bridge not found.', true);
+        }
+    }
+
+    // Special case function specifically for making a POST payment
+    function makePayment(amount) {
+        const command = {
+            method: 'POST',
+            headers: {
+                'Data-Type': 'payment'
+            },
+            body: {
+                'amount': amount
+            }
+        };
+
+        const jsonString = JSON.stringify(command);
+
+        if (window.Bridge) {
+            window.Bridge.postMessage(jsonString);
+        } else {
+            console.error('JavaScript Channel "Bridge" not found.');
+            updateStatus('Error: JavaScript Bridge not found.', true);
+        }
+    }
+</script>

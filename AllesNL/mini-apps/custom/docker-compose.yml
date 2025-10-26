@@ -1,0 +1,12 @@
+services:
+  custom-mini-app:
+    container_name: custom-mini-app
+    build: .
+    networks:
+      - mini-apps
+
+networks:
+  mini-apps:
+    driver: bridge
+    name: allesnl-mini-app_network
+    external: true

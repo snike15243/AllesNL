@@ -1,0 +1,21 @@
+services:
+  template-mini-app:
+    container_name: template-mini-app
+    build: .
+    networks:
+      - mini-apps
+      - template-mini-app
+
+  quoteslate:
+    container_name: quoteslate
+    build: ../../third-party/quoteslate
+    networks:
+      - template-mini-app
+
+networks:
+  template-mini-app:
+    driver: bridge
+  mini-apps:
+    driver: bridge
+    name: allesnl-mini-app_network
+    external: true
