@@ -4,7 +4,7 @@
 No need to worry about whether your favorite delivery app works in the Netherlands or how to navigate public transport, AllesNL allows you to quickly discover and use **mini-app** versions of the most popular Dutch applications.  
 Download AllesNL, register, and you’ll be ready to enjoy the complete Dutch app ecosystem.
 
-To get familiar with the concept of super-apps and mini-apps the following blog gives good overview: https://web.dev/explore/mini-apps .
+If not familiar with the concept of super-apps and mini-apps the following blog gives good overview: https://web.dev/explore/mini-apps .
 
 ---
 
