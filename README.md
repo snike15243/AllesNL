@@ -88,10 +88,14 @@ In this step, we’ll set up AllesNL.
     docker compose up --build -d
     ```
  Wait for docker to finish building. It is important to build mini-apps after the backend so they can execute registration function.
+
 6. Open `AllesNL/allesnl_mobile` in Intellij with android studio plugin or in android studio.
+
 7. Start an android phone emulator.
-8. Select the virtual phone as your desired platform and run the applicatoin.
-9. At this point you should be able to see AllesNL mobile application. For teh purpose of development we are going to create an user. Please click highlighted register word. Once, register screen opens fill in the fields with any information and press the register button. 
+
+8. Select the virtual phone as your desired platform and run the application.
+
+9. At this point you should be able to see AllesNL mobile application. For the purpose of development we are going to create an user. Please click highlighted register word. Once, register screen opens fill in the fields with any information and press the register button. 
 
 ![Registration screen](resources/register.png)
 
@@ -347,7 +351,7 @@ Now after clicking get ticket button, our application should displayed received 
 
 ![Transportation app](resources/transportationApp1.png)
 
-Current from/code of our mini-app can be found in `custom` folder. 
+Current form/code of our mini-app can be found in `custom` folder. 
 
 ---
 
@@ -360,7 +364,7 @@ To integrate your mini-app please send zipped custom folder to Aykut, Bryan, Hal
 
 ### Final Notes
 
-This tutorial covers the basic logic of AllesNL. For examples of how external services are integrated, please refer to the Template Mini-App: `AllesNL/mini-apps/template`.
+This tutorial covers the basic logic of AllesNL. For example of how external services are integrated, please refer to the Template Mini-App: `AllesNL/mini-apps/template`.
 Adding additional functionality to your mini-apps largely corresponds to developing a standard web application with Spring backend and in that sense, the team hopes that AllesNL does not introduce much additional complexity.
 In the future, we aim to integrate a smoother and more robust workflow between the mobile app and the mini-app backend, as well as provide support for modern web applications and provide detailed documentation of core AllesNL functions.
 
