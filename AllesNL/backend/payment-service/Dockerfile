@@ -5,6 +5,8 @@ WORKDIR /app
 COPY pom.xml .
 COPY mvnw .
 COPY .mvn .mvn
+RUN chmod +x mvnw
+
 COPY src ./src
 
 RUN ./mvnw package
