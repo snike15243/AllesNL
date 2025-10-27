@@ -66,7 +66,7 @@ public class MiniAppController {
     public ResponseEntity<RegistrationResponse> registerMiniApp(@RequestBody RegistrationRequest registration) {
         // First register in the registry
         log.info("Received Registration: {}", registration);
-        MiniAppInfo miniAppInfo = miniAppRegistry.register(new MiniAppInfo((long) -1, registration.appName(), "", registration.baseUrl(), ""));
+        MiniAppInfo miniAppInfo = miniAppRegistry.register(new MiniAppInfo((long) -1, registration.appName(), "", registration.baseUrl(), "", registration.authToken()));
         log.info("First Registration: {}", miniAppInfo);
         // Second get the details by calling the mini-app using the miniAppClientService
         Optional<MiniAppDetails> optionalMiniAppDetails = miniAppClientService.getMiniAppDetails(miniAppInfo.getAppId());

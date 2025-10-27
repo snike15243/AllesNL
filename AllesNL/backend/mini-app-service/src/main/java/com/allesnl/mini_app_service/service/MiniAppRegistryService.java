@@ -5,13 +5,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class MiniAppRegistryService {
 
     private final Map<Long, MiniAppInfo> miniApps = new ConcurrentHashMap<>();
+    private final AtomicLong nextId = new AtomicLong(0);
+
     public MiniAppInfo register(MiniAppInfo miniAppInfo) {
-        Long appId = (long) miniApps.size();
+        Long appId = nextId.getAndIncrement();
         miniAppInfo.setAppId(appId);
         miniApps.put(miniAppInfo.getAppId(), miniAppInfo);
         return miniAppInfo;

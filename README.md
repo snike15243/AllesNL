@@ -1,8 +1,15 @@
 # AllesNL
 
 **AllesNL** is a super app designed to make visiting the Netherlands convenient.  
-No need to worry about whether your favorite delivery app works in the Netherlands or how to navigate public transport — AllesNL allows you to quickly discover and use **mini-app** versions of the most popular Dutch applications.  
+No need to worry about whether your favorite delivery app works in the Netherlands or how to navigate public transport, AllesNL allows you to quickly discover and use **mini-app** versions of the most popular Dutch applications.  
 Download AllesNL, register, and you’ll be ready to enjoy the complete Dutch app ecosystem.
+
+---
+
+This repository is part of the TU Delft *Software Architecture* course project. We want new mini-apps to be easily integrated into AllesNL by external developers.  
+We’d like your feedback on how well we explain AllesNL and how demanding you find/estimate the mini-app development process to be, in order to assess ease of integration for our final product.  
+Please answer the following questionnaire while going through the tutorial: [Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSe0hIYqRhT8uqYeOjy-PNBq0vHsq9Jq22h05tQBd0PFt6baXw/viewform?usp=header).  
+If you actually develop a mini-app, please send it to **Aykut, Bryan, Halil, or Luka** so we can add it to our demo.
 
 ---
 
@@ -80,15 +87,15 @@ In this step, we’ll set up AllesNL.
     ```bash
     docker compose up --build -d
     ```
- Wait for docker to finish building.  
-6. Open AllesNL/allesnl_mobile in Intellij with android studio plugin or in android studio.
+ Wait for docker to finish building. It is important to build mini-apps after the backend so they can execute registration function.
+6. Open `AllesNL/allesnl_mobile` in Intellij with android studio plugin or in android studio.
 7. Start an android phone emulator.
 8. Select the virtual phone as your desired platform and run the applicatoin.
 9. At this point you should be able to see AllesNL mobile application. For teh purpose of development we are going to create an user. Please click highlighted register word. Once, register screen opens fill in the fields with any information and press the register button. 
 
 ![Registration screen](resources/register.png)
 
-10. Login with the created users eamail and password. After loging in you should see custom and template mini-app.
+10. Login with the created users email and password. After login in you should see custom and template mini-app.
 
 ![Home screen](resources/homeScreen.png)
 
@@ -154,9 +161,9 @@ Although it currently contains only a few HTML elements, we can identify several
       ✅ You can **change the body of this function** to customize your app’s behavior,  
       but **do not change the function signature**.
 
-3. **`function sendCommand(method, dataType, body)`**  
+3. **`function sendCommand(method, dataType, body, sendUserData = false)`**  
    This function is the core of AllesNL’s logic.  
-   It takes three parameters: method which is of type
+   It takes four parameters: method which is of type
    ```javascript
    const HttpMethods = Object.freeze({
        POST: 'POST',
@@ -164,10 +171,10 @@ Although it currently contains only a few HTML elements, we can identify several
        DELETE: 'DELETE'
    });
     ```
-, dataType, which is a header being passes to your mini-app backend , and body which is the actual data being sent.
+, dataType, which is a header being passes to your mini-app backend, body which is the actual data being sent, and 
+user flag which indicates should user information be sent under `body["user"]` .
 ⚠️ **This function should NOT be changed.**
 
----
 
 4. **`function makePayment(amount)`**  
    This function is a **special case** of the `sendCommand` function.  
@@ -176,7 +183,7 @@ Although it currently contains only a few HTML elements, we can identify several
 
 ---
 
-###### What Is This Workflow?
+##### What Is This Workflow?
 
 Your `index.html` file runs on the client’s phone.  
 However, AllesNL cannot allow user information or internal utilities to be directly shared.  
@@ -190,7 +197,7 @@ The communication flow is illustrated in the following diagram:
 
 ---
 
-###### Updating the UI
+##### Updating the UI
 
 Currently there is not manny elements in our mini-app:
 
@@ -245,8 +252,9 @@ with
 Now you can use android studio to fastly reload your html changes. Copy your `AllesNL/mini-apps/template/src/main/resources/static/index.html`
 into `AllesNL/allesnl_mobile/assets/html/dummy_content.html`.
 
+--- 
 
-#### Updating the backend
+### Updating the backend
 Please navigate to `custom/src/main/java/nl/allesnl/custom/controller/InternalController.java` and locate the `@GetMapping("/client")` method.  
 Here, we will process the incoming request and return a JSON object that can be handled by the `updateStatus` function on the frontend.
 
@@ -335,10 +343,25 @@ Next step is to update 'updateStatus' function to process the returning map. If 
     el.classList.add(isError ? 'status-false' : 'muted');
 }
 ```
-Our final application looks like this:
+Now after clicking get ticket button, our application should displayed received ticket. Our final application looks like following:
 
 ![Transportation app](resources/transportationApp1.png)
 
-#### Receiving user info
+Current from/code of our mini-app can be found in `custom` folder. 
 
-#### Useful tutorials
+---
+
+### Integrate with Allesnl
+
+Currently, there is no systematic way to add new mini-apps to AllesNL. However, even in the final product mini-app addition will be regulated by AllesNL team.
+To integrate your mini-app please send zipped custom folder to Aykut, Bryan, Halil, or Luka.
+
+---
+
+### Final Notes
+
+This tutorial covers the basic logic of AllesNL. For examples of how external services are integrated, please refer to the Template Mini-App: `AllesNL/mini-apps/template`.
+Adding additional functionality to your mini-apps largely corresponds to developing a standard web application with Spring backend and in that sense, the team hopes that AllesNL does not introduce much additional complexity.
+In the future, we aim to integrate a smoother and more robust workflow between the mobile app and the mini-app backend, as well as provide support for modern web applications and provide detailed documentation of core AllesNL functions.
+
+

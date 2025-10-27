@@ -10,13 +10,15 @@ import org.springframework.web.client.RestClient;
 public class InternalClientService {
 
     private final RestClient restClient;
+    private final String internalAuthToken;
 
-    public InternalClientService(@Qualifier("internalRestClient") RestClient restClient) {
+    public InternalClientService(@Qualifier("internalRestClient") RestClient restClient, String internalAuthToken) {
         this.restClient = restClient;
+        this.internalAuthToken = internalAuthToken;
     }
 
     public RegistrationResponse register(String appName, String baseUrl){
-        RegistrationRequest request = new RegistrationRequest(appName, baseUrl);
+        RegistrationRequest request = new RegistrationRequest(appName, baseUrl, internalAuthToken);
         return restClient.post()
                 .uri("/register")
                 .body(request)

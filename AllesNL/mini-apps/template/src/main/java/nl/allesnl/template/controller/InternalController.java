@@ -75,11 +75,27 @@ class InternalController {
     ResponseEntity<Map<String, Object>> postClientData(@RequestBody Map<String, Object> payload, @RequestHeader HttpHeaders headers) {
 
         final String dataTypeHeader = headers.getFirst("Data-Type");
-        Map<String, Object> map = new HashMap<>();
-        long millis = System.currentTimeMillis();
-        map.put("Message", String.valueOf(millis %2 == 0));
+        Map<String, Object> res = new HashMap<>();
+        switch (dataTypeHeader) {
+            case "user":
+                Quote quote = externalClientService.getQuote();
+                Object user = payload.get("user");
 
-        return ResponseEntity.ok(map);
+                System.out.println(user);
+                res.put("author", quote);
+
+                Map<String, Object> userMap = (Map<String, Object>) payload.get("user");
+
+                if (userMap != null) {
+                    String userName = (String) userMap.get("name");
+                    res.put("quote", new Quote(0, quote.quote(),  userName) );
+                }
+                break;
+            default:
+                res.put("error", "User error");
+        }
+
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/client")
@@ -87,10 +103,16 @@ class InternalController {
 
         final String dataTypeHeader = headers.getFirst("Data-Type");
         System.out.println(dataTypeHeader);
-        Map<String, Object> map = new HashMap<>();
-        map.put("Message", "Get");
-
-        return ResponseEntity.ok(map);
+        Map<String, Object> res = new HashMap<>();
+        switch (dataTypeHeader) {
+            case "quote":
+                Quote quote = externalClientService.getQuote();
+                res.put("quote", quote);
+                break;
+            default:
+                res.put("error", "Unknown Data-Type");
+        }
+        return ResponseEntity.ok(res);
     }
 
     @DeleteMapping("/client")

@@ -1,104 +1,232 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JS Command Bridge</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <uses-permission android:name="android.permission.INTERNET" />
+  <title>AllesNL Template Mini-App</title>
   <style>
-    body { font-family: sans-serif; padding: 16px; }
-    button { font-size: 16px; padding: 10px 15px; border-radius: 8px; border: none; background-color: #007bff; color: white; cursor: pointer; margin-top: 10px;}
-    input { font-size: 16px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: calc(100% - 22px); margin-bottom: 10px; }
-    .group { border: 1px solid #eee; padding: 10px; margin-top: 20px; border-radius: 8px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 0; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .container { background: white; min-height: 100vh; width: 100%; padding: 20px 16px; animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
+    h1 { color: #667eea; font-size: 1.75em; margin-bottom: 8px; font-weight: 700; }
+    .subtitle { color: #666; font-size: 1em; }
+    .content-section { margin: 16px 0; }
+    .card { background: #f8f9fa; border-radius: 12px; padding: 20px 16px; margin: 16px 0; transition: transform 0.2s ease; touch-action: manipulation; }
+    .card:active { transform: scale(0.98); }
+    .card h3 { color: #764ba2; margin-bottom: 12px; font-size: 1.2em; font-weight: 600; }
+    .card p { color: #555; line-height: 1.6; font-size: 0.95em; }
+    .button-group { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; padding: 0 4px; }
+    .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: block; text-align: center; width: 100%; touch-action: manipulation; -webkit-user-select: none; user-select: none; min-height: 48px; }
+    .btn:active { transform: scale(0.96); opacity: 0.9; }
+    .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea; }
+    .btn-secondary:active { background: #f0f0f0; }
+    footer { text-align: center; margin-top: 32px; padding: 20px 0 24px 0; border-top: 1px solid #ddd; color: #888; font-size: 0.85em; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .feature-item { text-align: center; padding: 16px 8px; background: white; border-radius: 10px; }
+    .feature-icon { font-size: 2em; margin-bottom: 8px; }
+    .feature-item strong { font-size: 0.85em; display: block; color: #333; }
+    @supports (padding: max(0px)) { .container { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-bottom: max(20px, env(safe-area-inset-bottom)); } }
+    .btn, .card h3, .feature-item { -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    html { scroll-behavior: smooth; }
+    .status-chip { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 8px 12px; font-weight: 600; }
+    .status-true { background: #e8fff3; color: #0a7c44; border: 1px solid #bdf0d3; }
+    .status-false { background: #fff1f0; color: #b42318; border: 1px solid #ffcdc7; }
+    .muted { color: #666; font-size: .9rem; }
+    input[type="text"], textarea { width: 100%; padding: 14px 12px; border: 1px solid #dfe3ea; border-radius: 10px; font-size: 1rem; outline: none; }
+    input[type="text"]:focus, textarea:focus { border-color: #667eea; }
+    .row { display: grid; gap: 12px; }
+    @media (min-width: 560px) { .row { grid-template-columns: 1fr auto; align-items: end; } }
   </style>
 </head>
 <body>
+<div class="container">
+  <header>
+    <h1>AllesNL Template</h1>
+    <p class="subtitle">Your Modern Mini-App Template</p>
+  </header>
 
-  <h1>JS Command Bridge</h1>
-  <p>This page sends structured commands to Flutter.</p>
+  <div class="content-section">
+    <div class="card">
+      <h3> Welcome to AllesNL!</h3>
+      <p>This template is optimized for Android apps and shows a fluent, native like experience on your mobile device.</p>
+    </div>
 
-  <div class="group">
-    <h2>User Profile</h2>
-    <input type="text" id="firstNameInput" placeholder="First Name">
-    <button onclick="sendCommand(HttpMethods.POST, 'user_profile', { firstName: document.getElementById('firstNameInput').value, lastName: 'FromWebView' })">POST User</button>
+
+    <div class="card">
+      <h3>Get to work</h3>
+      <p>This template is specially designed for Android WebView integration. All touch interactions are optimized for a native feeling.</p>
+    </div>
   </div>
 
-  <div class="group">
-    <h2>Payment (Special Case)</h2>
-    <input type="number" id="amountInput" placeholder="Amount">
-    <button onclick="makePayment(parseInt(document.getElementById('amountInput').value))">POST Payment</button>
+  <div class="card" id="quote-card">
+    <h3> Daily Quote</h3>
+    <p id="quote-text">Loading quote...</p>
+    <p id="quote-author" style="text-align:right; font-weight:600; margin-top:8px;"></p>
+    <button class="btn btn-secondary" onclick="fetchQuote()">Get New Quote</button>
+
+    <p id="response-status" class="muted" style="margin-top:8px;"></p>
   </div>
 
-  <div class="group">
-      <h2>Context-Aware Actions</h2>
-      <p>These buttons use the 'currentUser' object injected by Flutter.</p>
-      <button onclick="sendCommand(HttpMethods.GET, 'user_profile', { userId: window.currentUser ? window.currentUser.id : null })">GET My User Profile</button>
-      <button onclick="sendCommand(HttpMethods.UPDATE, 'user_profile', { userId: window.currentUser ? window.currentUser.id : null, newName: 'Updated Name' })">UPDATE My User Profile</button>
-      <button onclick="sendCommand(HttpMethods.DELETE, 'user_profile', { userId: window.currentUser ? window.currentUser.id : null })">DELETE My User Profile</button>
+
+  <div class="button-group">
+    <button class="btn" onclick="handlePrimaryAction()">Primary Action</button>
+    <button class="btn btn-secondary" onclick="handleSecondaryAction()">More Info</button>
   </div>
 
-  <p id="response-status"></p>
+  <footer>
+    <p>&copy; 2025 AllesNL Template Mini-App | Made with <3</p>
+  </footer>
+</div>
 
-  <script>
-    // 1. Added an "Enum" for HTTP Methods to prevent typos
-    const HttpMethods = Object.freeze({
+<script>
+  // Android WebView interface detection
+  const isAndroidWebView = typeof Android !== 'undefined';
+
+  console.log('AllesNL Template Mini-App loaded!');
+  console.log('Android WebView detected:', isAndroidWebView);
+
+  // Prevent context menu on long press
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+  function handlePrimaryAction() {
+      if (isAndroidWebView && typeof Android.onPrimaryAction === 'function') {
+          Android.onPrimaryAction();
+      } else {
+          alert('Hello from AllesNL!');
+      }
+  }
+
+  function handleSecondaryAction() {
+      sendCommand(HttpMethods.POST, 'user', null, true);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+      const year = new Date().getFullYear();
+      console.log(`Template loaded in ${year}`);
+      if (isAndroidWebView && typeof Android.onPageLoaded === 'function') {
+          Android.onPageLoaded();
+      }
+      fetchQuote(); // Auto-load quote
+  });
+
+  // Prevent double-tap zoom
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(event) {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) { event.preventDefault(); }
+      lastTouchEnd = now;
+  }, false);
+
+  // Uses the unified pipeline
+  function fetchQuote() {
+      try {
+          // Data-Type: "quote" | body: null
+          sendCommand(HttpMethods.GET, 'quote', null);
+          updateStatus('GET /quote sent. Awaiting backend result…', false);
+      } catch (err) {
+          console.error('Failed to send GET /quote:', err);
+          updateStatus('Failed to send GET for quote.', true);
+      }
+  }
+</script>
+
+
+
+<script>
+  // Single entry point: ALL status updates & backend payload handling happen here
+  // updateStatus(message, isError)
+  // - message can be plain text OR a JSON string/object like { message: true|false }
+  // - isError is a boolean indicating generic error state when not sending a backend payload
+
+  function updateStatus(body, isError) {
+      const el = document.getElementById('response-status');
+      if (!el) return; // safely exit if status element not present
+      el.classList.remove('status-true','status-false','muted');
+
+      let obj = body;
+      if (typeof body === 'string') {
+          try { obj = JSON.parse(body); } catch (_) { obj = body; }
+      }
+
+      // Optional: debug dump if you have a panel with id="backend-body"
+      const dumpEl = document.getElementById('backend-body');
+      if (dumpEl) dumpEl.textContent = JSON.stringify(obj, null, 2);
+
+       // Expecting: { "quote": { "id": ..., "quote": "...", "author": "..." } }
+      if (obj && typeof obj === 'object' && obj.quote) {
+          const q = obj.quote;
+          const quoteText = q.quote || q.text || q.quoteText || '';
+          const author = q.author || q.by || '';
+
+          const qt = document.getElementById('quote-text');
+          const qa = document.getElementById('quote-author');
+          if (qt) qt.textContent = `"${quoteText}"`;
+          if (qa) qa.textContent = author ? `${author}` : '';
+
+          el.textContent = 'Quote loaded';
+          el.classList.add('status-true');
+          return;
+      }
+
+      // Fallback
+      el.textContent = isError ? 'Failed to load quote' : 'Response received';
+      el.classList.add(isError ? 'status-false' : 'muted');
+  }
+</script>
+
+<script>
+
+  const HttpMethods = Object.freeze({
       POST: 'POST',
       GET: 'GET',
-      UPDATE: 'UPDATE',
       DELETE: 'DELETE'
-    });
+  });
 
-    function updateStatus(message, isError) {
-      const statusElement = document.getElementById('response-status');
-      const messageText = (typeof message === 'object') ? JSON.stringify(message, null, 2) : message;
-      statusElement.innerText = messageText;
-      statusElement.style.color = isError ? 'red' : 'green';
-    }
-
-    // Generic function for other commands
-    function sendCommand(method, dataType, body) {
+  // Generic function for other commands
+  function sendCommand(method, dataType, body, sendUserData = false) {
       const command = {
-        method: method,
-        headers: {
-          'Data-Type': dataType
-        },
-        body: body
+          method: method,
+          headers: {
+              'Data-Type': dataType
+          },
+          body: body,
+          sendUserData: sendUserData
       };
       const jsonString = JSON.stringify(command);
 
       if (window.Bridge) {
-        window.Bridge.postMessage(jsonString);
-        const statusElement = document.getElementById('response-status');
-        statusElement.innerText = `Command Sent: ${method} for ${dataType}...`;
-        statusElement.style.color = 'black';
+          window.Bridge.postMessage(jsonString);
       } else {
-        console.error('JavaScript Channel "Bridge" not found.');
-        updateStatus('Error: JavaScript Bridge not found.', true);
+          console.error('JavaScript Channel "Bridge" not found.');
+          updateStatus('Error: JavaScript Bridge not found.', true);
       }
-    }
+  }
 
-    // Special case function specifically for making a POST payment
-    function makePayment(amount) {
+  // Special case function specifically for making a POST payment
+  function makePayment(amount) {
       const command = {
-        method: HttpMethods.POST, // Using the enum for consistency
-        headers: {
-          'Data-Type': 'payment'
-        },
-        body: {
-          'amount': amount
-        }
+          method: 'POST',
+          headers: {
+              'Data-Type': 'payment'
+          },
+          body: {
+              'amount': amount
+          }
       };
 
       const jsonString = JSON.stringify(command);
 
       if (window.Bridge) {
-        window.Bridge.postMessage(jsonString);
-        const statusElement = document.getElementById('response-status');
-        statusElement.innerText = `Payment Command Sent for amount: ${amount}...`;
-        statusElement.style.color = 'black';
+          window.Bridge.postMessage(jsonString);
       } else {
-        console.error('JavaScript Channel "Bridge" not found.');
-        updateStatus('Error: JavaScript Bridge not found.', true);
+          console.error('JavaScript Channel "Bridge" not found.');
+          updateStatus('Error: JavaScript Bridge not found.', true);
       }
-    }
-  </script>
-
-</body>
-</html>
+  }
+</script>

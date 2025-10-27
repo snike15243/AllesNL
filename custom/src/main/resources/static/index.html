@@ -46,36 +46,151 @@
 </head>
 <body>
 <div class="container">
-    <p>  Custom app</p>
+    <header>
+        <h1>Transportation App</h1>
+        <p class="subtitle">Buy a train ticket between two Dutch cities</p>
+    </header>
+
+    <section class="card">
+        <h3>Select Your Trip</h3>
+        <div class="content-section">
+            <div class="row" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                    <label for="origin-select">Origin</label>
+                    <select id="origin-select" aria-label="Origin city">
+                        <option value="" disabled selected>Select origin</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="destination-select">Destination</label>
+                    <select id="destination-select" aria-label="Destination city">
+                        <option value="" disabled selected>Select destination</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group" style="margin-top:16px;">
+                <button id="get-ticket-btn" class="btn">Get Ticket</button>
+            </div>
+
+            <div style="margin-top:16px;">
+                <span id="response-status" class="status-chip muted">Waiting for input </span>
+            </div>
+        </div>
+    </section>
+
+    <footer>Made with <3 for AllesNL mini-apps</footer>
 </div>
 
 <script>
+    (function initTicketUI() {
+        const cities = [
+            'Amsterdam','Rotterdam','Den Haag','Utrecht','Eindhoven','Tilburg','Groningen',
+            'Almere','Breda','Nijmegen','Enschede','Apeldoorn','Haarlem','Amersfoort',
+            'Arnhem','Zaanstad','Haarlemmermeer','\'s-Hertogenbosch','Zwolle','Leiden',
+            'Maastricht','Dordrecht','Delft','Leeuwarden','Heerlen','Helmond'
+        ];
+
+        const originSel = document.getElementById('origin-select');
+        const destSel   = document.getElementById('destination-select');
+        const btn       = document.getElementById('get-ticket-btn');
+
+        function fillSelect(selectEl) {
+            cities.forEach(city => {
+                const opt = document.createElement('option');
+                opt.value = city;
+                opt.textContent = city;
+                selectEl.appendChild(opt);
+            });
+        }
+
+        fillSelect(originSel);
+        fillSelect(destSel);
+
+        btn.addEventListener('click', function() {
+            const origin = originSel.value;
+            const destination = destSel.value;
+
+            if (!origin || !destination) {
+                updateStatus('Please select both origin and destination.', true);
+                return;
+            }
+            if (origin === destination) {
+                updateStatus('Origin and destination must be different.', true);
+                return;
+            }
+
+            // Inform user locally
+            updateStatus(`Requesting ticket: ${origin} → ${destination}…`, false);
+
+            // Call the provided sendCommand without modifying its implementation
+            sendCommand(
+                HttpMethods.POST,
+                'ticket',
+                { origin: origin, destination: destination }
+            );
+        });
+    })();
+</script>
+
+<script>
+    // Do not change the signature but feel free to change the body
     // Single entry point: ALL status updates & backend payload handling happen here
     // updateStatus(message, isError)
     // - message can be plain text OR a JSON string/object like { message: true|false }
     // - isError is a boolean indicating generic error state when not sending a backend payload
     function updateStatus(body, isError) {
         const el = document.getElementById('response-status');
-        el.classList.remove('status-true','status-false','muted');
+        el.classList.remove('status-true', 'status-false', 'muted');
 
-        // Try to normalize body into an object
+        // Normalize body into an object if it's a string
         let obj = body;
         if (typeof body === 'string') {
             try { obj = JSON.parse(body); } catch (_) { obj = body; }
         }
 
-        // If we got an object, show it and check positivity
-        if (obj && typeof obj === 'object') {
+        // Clear any existing ticket cards
+        const oldCard = document.getElementById('ticket-card');
+        if (oldCard) oldCard.remove();
 
+        if (obj && typeof obj === 'object') {
+            // Handle backend JSON structure
+            const success = obj.success === true;
+            const message = obj.message || 'Response received';
+            el.textContent = message;
+            el.classList.add(success ? 'status-true' : 'status-false');
+
+            // If we got a successful ticket creation, show the ticket card
+            if (success && obj.data && obj.data.origin && obj.data.destination && obj.data.time) {
+                const ticket = obj.data;
+
+                // Create a card container
+                const card = document.createElement('div');
+                card.id = 'ticket-card';
+                card.className = 'card';
+                card.style.marginTop = '16px';
+                card.innerHTML = `
+                <h3> Your Ticket</h3>
+                <p><strong>From:</strong> ${ticket.origin}</p>
+                <p><strong>To:</strong> ${ticket.destination}</p>
+                <p><strong>Departure Time:</strong> ${ticket.time}</p>
+            `;
+
+                // Insert it below the response-status element
+                el.insertAdjacentElement('afterend', card);
+            }
+            return;
         }
 
-        // Fallback: plain text
+        // Fallback for plain text
         el.textContent = String(body);
         el.classList.add(isError ? 'status-false' : 'muted');
     }
 </script>
 <script>
-
+    /////////////////////////
+    ///// DO NOT CHANGE  ////
+    /////////////////////////
     const HttpMethods = Object.freeze({
         POST: 'POST',
         GET: 'GET',
@@ -83,13 +198,14 @@
     });
 
     // Generic function for other commands
-    function sendCommand(method, dataType, body) {
+    function sendCommand(method, dataType, body, sendUserData = false) {
         const command = {
             method: method,
             headers: {
                 'Data-Type': dataType
             },
-            body: body
+            body: body,
+            sendUserData: sendUserData
         };
         const jsonString = JSON.stringify(command);
 

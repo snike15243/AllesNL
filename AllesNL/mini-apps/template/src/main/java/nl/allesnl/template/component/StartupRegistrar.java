@@ -23,14 +23,23 @@ class StartupRegistrar {
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
-        try {
-            RegistrationResponse response = internalClientService.register(appName, "http://" + appName + ":8080/internal");
-            registrationState.setRegistrationId(response.registrationId());
-            System.out.println("Registered with registrationId " + response.registrationId());
-        } catch (Exception e) {
-            registrationState.setRegistrationId(-1);
-            System.err.println("Failed to register: " + e.getMessage());
+        int maxRetries = 10;
+        int retry = 1;
+        Exception failure = null;
+        while (retry <= maxRetries) {
+            System.out.println("Registration try " + retry + " from max " + maxRetries);
+            try {
+                RegistrationResponse response = internalClientService.register(appName, "http://" + appName + ":8080/internal");
+                registrationState.setRegistrationId(response.registrationId());
+                System.out.println("Registered with registrationId " + response.registrationId());
+                return;
+            } catch (Exception e) {
+                registrationState.setRegistrationId(-1);
+                failure = e;
+            }
+            retry++;
         }
+        System.err.println("Failed to register: " + failure.getMessage());
     }
 
 }

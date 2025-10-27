@@ -54,17 +54,20 @@ public class MiniAppControllerTest {
                     "Sample MiniApp",
                     "The best mini app",
                     "http://sample-miniapp-url:8080/internal",
-                    "http://logo-url/logo.png");
-            RegistrationRequest registration = new RegistrationRequest(expectedMiniAppInfo.getAppName(), expectedMiniAppInfo.getBaseUrl());
+                    "http://logo-url/logo.png",
+                    "TOKEN2");
+            RegistrationRequest registration = new RegistrationRequest(expectedMiniAppInfo.getAppName(), expectedMiniAppInfo.getBaseUrl(), expectedMiniAppInfo.getAuthToken());
             when(miniAppRegistryService.register(new MiniAppInfo(-1L,
                     expectedMiniAppInfo.getAppName(),
                     "",
                     expectedMiniAppInfo.getBaseUrl(),
-                    ""))).thenReturn(new MiniAppInfo(1L,
+                    "",
+                    expectedMiniAppInfo.getAuthToken()))).thenReturn(new MiniAppInfo(1L,
                     expectedMiniAppInfo.getAppName(),
                     "",
                     expectedMiniAppInfo.getBaseUrl(),
-                    ""));
+                    "",
+                    expectedMiniAppInfo.getAuthToken()));
             when(miniAppClientService.getMiniAppDetails(1L)).thenReturn(Optional.of(new MiniAppDetails(
                     1L,
                     expectedMiniAppInfo.getAppName(),
@@ -84,7 +87,8 @@ public class MiniAppControllerTest {
                     expectedMiniAppInfo.getAppName(),
                     "",
                     expectedMiniAppInfo.getBaseUrl(),
-                    ""));
+                    "",
+                    expectedMiniAppInfo.getAuthToken()));
             verify(miniAppClientService).getMiniAppDetails(1L);
             verify(miniAppRegistryService).replace(expectedMiniAppInfo);
         }
@@ -92,8 +96,8 @@ public class MiniAppControllerTest {
         @Test
         public void getAllMiniApps_shouldReturnAllMiniAppDetails() {
             // Given
-            MiniAppInfo expectedInfo1 = new MiniAppInfo(1L, "App1", "Description1", "BaseUrl1","LogoUrl1");
-            MiniAppInfo expectedInfo2 = new MiniAppInfo(2L, "App2", "Description2", "BaseUrl2","LogoUrl2");
+            MiniAppInfo expectedInfo1 = new MiniAppInfo(1L, "App1", "Description1", "BaseUrl1","LogoUrl1", "TOKEN1");
+            MiniAppInfo expectedInfo2 = new MiniAppInfo(2L, "App2", "Description2", "BaseUrl2","LogoUrl2", "TOKEN2");
             MiniAppDetails expectedDetails1 = new MiniAppDetails(1L, "App1", "Description1","LogoUrl1");
             MiniAppDetails expectedDetails2 = new MiniAppDetails(2L, "App2", "Description2","LogoUrl2");
 
@@ -113,7 +117,7 @@ public class MiniAppControllerTest {
         @Test
         public void testGetMiniAppInfo() {
             // Given
-            MiniAppInfo expectedInfo = new MiniAppInfo(1L, "App1", "Description1", "BaseUrl1","LogoUrl1");
+            MiniAppInfo expectedInfo = new MiniAppInfo(1L, "App1", "Description1", "BaseUrl1","LogoUrl1", "TOKEN1");
             MiniAppDetails expectedDetails = new MiniAppDetails(1L, "App1", "Description1","LogoUrl1");
 
             when(miniAppRegistryService.get(1L)).thenReturn(Optional.of(expectedInfo));

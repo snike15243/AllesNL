@@ -1,5 +1,4 @@
 import 'dart:convert'; // Import for jsonDecode
-import 'dart:ffi';
 import 'package:allesnl_mobile/views/api/api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,13 +59,20 @@ class _MiniAppPageState extends State<MiniAppPage> {
       final String method = command['method'] as String? ?? '';
       final bool sendUserData = command['sendUserData'] as bool? ?? false;
       final Map<String, dynamic> body = command['body'] as Map<String, dynamic>? ?? {};
-      if(sendUserData){
-        body['userName'] = widget.userName;
-        body['userEmail'] = widget.userEmail;
-      }
       final Map<String, String> headers = (command['headers'] as Map<String, dynamic>? ?? {})
           .map((key, value) => MapEntry(key, value.toString()));
 
+      if (sendUserData) {
+        debugPrint('Attaching user data to the request body...');
+        // 2. Create a map with the user's details.
+        final userMap = {
+          'name': widget.userName,
+          'email': widget.userEmail,
+          'phoneNumber': widget.userPhoneNumber
+        };
+        // 3. Add the user map to the request body under the 'user' key.
+        body['user'] = userMap;
+      }
       dynamic responseData;
 
       // Use a switch statement to route based on the method or header
@@ -109,6 +115,7 @@ class _MiniAppPageState extends State<MiniAppPage> {
 
       if (responseData != null) {
         final jsonLiteral = jsonEncode(responseData);
+        debugPrint('Sending response to WebView: $jsonLiteral');
         _controller.runJavaScript('updateStatus($jsonLiteral, false)');
       } else {
         _controller.runJavaScript('updateStatus("API call failed from Flutter.", true)');

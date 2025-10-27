@@ -34,7 +34,7 @@ public class MiniAppClientService {
             return Optional.empty();
         }
         MiniAppInfo miniAppInfo = optionalMiniAppInfo.get();
-        RestClient restClient = createRestClient(miniAppInfo.getBaseUrl());
+        RestClient restClient = createRestClient(miniAppInfo);
         try {
             MiniAppDetails miniAppDetails = restClient.get()
                     .uri("/details")
@@ -57,7 +57,7 @@ public class MiniAppClientService {
             return ResponseEntity.notFound().build();
         }
         MiniAppInfo miniAppInfo = optionalMiniAppInfo.get();
-        RestClient restClient = createRestClient(miniAppInfo.getBaseUrl());
+        RestClient restClient = createRestClient(miniAppInfo);
         try {
             ResponseEntity<byte[]> response = restClient.get()
                     .uri("/html")
@@ -80,7 +80,7 @@ public class MiniAppClientService {
             return ResponseEntity.notFound().build();
         }
         MiniAppInfo miniAppInfo = optionalMiniAppInfo.get();
-        RestClient restClient = createRestClient(miniAppInfo.getBaseUrl());
+        RestClient restClient = createRestClient(miniAppInfo);
         try {
             ResponseEntity<byte[]> response = restClient.post()
                     .uri("/html")
@@ -105,7 +105,7 @@ public class MiniAppClientService {
             return ResponseEntity.notFound().build();
         }
         MiniAppInfo miniAppInfo = optionalMiniAppInfo.get();
-        RestClient restClient = createRestClient(miniAppInfo.getBaseUrl());
+        RestClient restClient = createRestClient(miniAppInfo);
 
         try {
             ResponseEntity<Map<String, Object>> response = restClient.post()
@@ -139,7 +139,7 @@ public class MiniAppClientService {
             return ResponseEntity.notFound().build();
         }
         MiniAppInfo miniAppInfo = optionalMiniAppInfo.get();
-        RestClient restClient = createRestClient(miniAppInfo.getBaseUrl());
+        RestClient restClient = createRestClient(miniAppInfo);
 
         try {
             ResponseEntity<Map<String, Object>> response = restClient.get()
@@ -171,7 +171,7 @@ public class MiniAppClientService {
             return ResponseEntity.notFound().build();
         }
         MiniAppInfo miniAppInfo = optionalMiniAppInfo.get();
-        RestClient restClient = createRestClient(miniAppInfo.getBaseUrl());
+        RestClient restClient = createRestClient(miniAppInfo);
 
         try {
             ResponseEntity<Map<String, Object>> response = restClient.delete()
@@ -196,9 +196,10 @@ public class MiniAppClientService {
     }
 
 
-    private RestClient createRestClient(String baseUrl) {
+    private RestClient createRestClient(MiniAppInfo miniAppInfo) {
         return restClientBuilder
-                .baseUrl(baseUrl)
+                .baseUrl(miniAppInfo.getBaseUrl())
+                .defaultHeader("X-Internal-Auth", miniAppInfo.getAuthToken())
                 .build();
     }
 }

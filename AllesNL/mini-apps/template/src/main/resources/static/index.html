@@ -47,90 +47,30 @@
 <body>
 <div class="container">
     <header>
-        <h1>🇳🇱 AllesNL Template</h1>
+        <h1>AllesNL Template</h1>
         <p class="subtitle">Your Modern Mini-App Template</p>
     </header>
 
     <div class="content-section">
         <div class="card">
-            <h3>✨ Welcome to AllesNL!</h3>
+            <h3> Welcome to AllesNL!</h3>
             <p>This template is optimized for Android apps and shows a fluent, native like experience on your mobile device.</p>
         </div>
 
-        <div class="card">
-            <h3>🚀 Features</h3>
-            <div class="feature-grid">
-                <div class="feature-item"><div class="feature-icon">⚡</div><strong>Quick</strong></div>
-                <div class="feature-item"><div class="feature-icon">📱</div><strong>Mobile</strong></div>
-                <div class="feature-item"><div class="feature-icon">🎨</div><strong>Modern</strong></div>
-            </div>
-        </div>
 
         <div class="card">
-            <h3>💡 Get to work</h3>
+            <h3>Get to work</h3>
             <p>This template is specially designed for Android WebView integration. All touch interactions are optimized for a native feeling.</p>
         </div>
     </div>
 
     <div class="card" id="quote-card">
-        <h3>📝 Daily Quote</h3>
+        <h3> Daily Quote</h3>
         <p id="quote-text">Loading quote...</p>
         <p id="quote-author" style="text-align:right; font-weight:600; margin-top:8px;"></p>
         <button class="btn btn-secondary" onclick="fetchQuote()">Get New Quote</button>
-    </div>
 
-    <!-- NEW: Enter Quote + Post to Flutter/Backend -->
-    <!-- REPLACE your old Enter Quote card with this multi-method demo -->
-    <div class="card" id="http-methods-card">
-        <h3>🧪 HTTP Methods Demo (PUT / GET / DELETE)</h3>
-        <p class="muted" style="margin-bottom:12px;">
-            These actions use the single bridge:
-            <code>sendCommand(method, dataType, body)</code>.
-            We’ll send header <code>Data-Type: "quote"</code> for all examples below.
-        </p>
-
-        <!-- POST -->
-        <div class="row" style="margin-top:10px;">
-            <div>
-                <label for="postQuoteInput" style="display:block;font-weight:600;margin-bottom:8px;">
-                    POST a quote (body: <code>{ quoteText }</code>)
-                </label>
-                <textarea id="postQuoteInput" rows="3" placeholder="Type a quote to POST…"></textarea>
-            </div>
-            <button class="btn" onclick="postQuote()">POST Quote</button>
-        </div>
-
-        <!-- GET -->
-        <div class="row" style="margin-top:14px;">
-            <div>
-                <label style="display:block;font-weight:600;margin-bottom:8px;">
-                    GET quote (no body)
-                </label>
-                <p class="muted">Sends <code>sendCommand('GET','quote', null)</code>.</p>
-            </div>
-            <button class="btn btn-secondary" onclick="getQuote()">GET Quote</button>
-        </div>
-
-        <!-- DELETE -->
-        <div class="row" style="margin-top:14px;">
-            <div>
-                <label for="deleteIdInput" style="display:block;font-weight:600;margin-bottom:8px;">
-                    DELETE by ID (optional body: <code>{ id }</code>)
-                </label>
-                <input id="deleteIdInput" type="text" placeholder="Enter ID to delete (optional)…" />
-                <div style="margin-top:8px;">
-                    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
-                        <input id="deleteWithBody" type="checkbox" />
-                        <span class="muted">Send DELETE with JSON body</span>
-                    </label>
-                </div>
-            </div>
-            <button class="btn" onclick="deleteQuote()">DELETE</button>
-        </div>
-
-        <div style="margin-top:14px;">
-            <span id="response-status" class="status-chip muted">Waiting for result…</span>
-        </div>
+        <p id="response-status" class="muted" style="margin-top:8px;"></p>
     </div>
 
 
@@ -139,24 +79,8 @@
         <button class="btn btn-secondary" onclick="handleSecondaryAction()">More Info</button>
     </div>
 
-    <h2>Payment Example</h2>
-    <button onclick="makePayment(150)">Make a 150 EUR Payment</button>
-
-
-    <div class="card" id="submit-card">
-        <h3>📤 Send Message</h3>
-        <p style="margin-bottom:12px;color:#555;">Type something and send it to the backend.</p>
-
-        <label for="messageInput" style="display:block;font-weight:600;margin-bottom:8px;">Message</label>
-        <input id="messageInput" type="text" placeholder="Type your message…" />
-
-        <button class="btn" style="margin-top:14px;" onclick="sendToBackend()">Send</button>
-
-        <pre id="submitStatus" style="margin-top:14px;padding:12px;background:#f8f9fa;border:1px solid #ebeff5;border-radius:10px;font-size:.9rem;white-space:pre-wrap;word-break:break-word;display:none;"></pre>
-    </div>
-
     <footer>
-        <p>&copy; 2025 AllesNL Template Mini-App | Made with ❤️</p>
+        <p>&copy; 2025 AllesNL Template Mini-App | Made with <3</p>
     </footer>
 </div>
 
@@ -164,31 +88,24 @@
     // Android WebView interface detection
     const isAndroidWebView = typeof Android !== 'undefined';
 
-    console.log('AllesNL Template Mini-App loaded! 🎉');
+    console.log('AllesNL Template Mini-App loaded!');
     console.log('Android WebView detected:', isAndroidWebView);
 
     // Prevent context menu on long press
     document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
-    // Handle primary action
     function handlePrimaryAction() {
         if (isAndroidWebView && typeof Android.onPrimaryAction === 'function') {
             Android.onPrimaryAction();
         } else {
-            alert('Hello from AllesNL! 👋');
+            alert('Hello from AllesNL!');
         }
     }
 
-    // Handle secondary action
     function handleSecondaryAction() {
-        if (isAndroidWebView && typeof Android.onSecondaryAction === 'function') {
-            Android.onSecondaryAction();
-        } else {
-            alert('Secondary action performed!');
-        }
+        sendCommand(HttpMethods.POST, 'user', null, true);
     }
 
-    // Notify Android that page is loaded
     document.addEventListener('DOMContentLoaded', function() {
         const year = new Date().getFullYear();
         console.log(`Template loaded in ${year}`);
@@ -206,131 +123,67 @@
         lastTouchEnd = now;
     }, false);
 
-    async function fetchQuote() {
+    // Uses the unified pipeline
+    function fetchQuote() {
         try {
-            const response = await fetch('/internal/quote');
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const quote = await response.json();
-            document.getElementById('quote-text').textContent = `"${quote.quote}"`;
-            document.getElementById('quote-author').textContent = `— ${quote.author}`;
+            // Data-Type: "quote" | body: null
+            sendCommand(HttpMethods.GET, 'quote', null);
+            updateStatus('GET /quote sent. Awaiting backend result…', false);
         } catch (err) {
-            console.error('Failed to fetch quote:', err);
-            document.getElementById('quote-text').textContent = 'Failed to load quote 😞';
-            document.getElementById('quote-author').textContent = '';
+            console.error('Failed to send GET /quote:', err);
+            updateStatus('Failed to send GET for quote.', true);
         }
     }
+</script>
 
+
+
+<script>
     // Single entry point: ALL status updates & backend payload handling happen here
     // updateStatus(message, isError)
     // - message can be plain text OR a JSON string/object like { message: true|false }
     // - isError is a boolean indicating generic error state when not sending a backend payload
+
     function updateStatus(body, isError) {
         const el = document.getElementById('response-status');
+        if (!el) return; // safely exit if status element not present
         el.classList.remove('status-true','status-false','muted');
 
-        // Try to normalize body into an object
         let obj = body;
         if (typeof body === 'string') {
             try { obj = JSON.parse(body); } catch (_) { obj = body; }
         }
 
-        // If we got an object, show it and check positivity
-        if (obj && typeof obj === 'object') {
-            // Optional: dump full body for debugging
-            const dumpEl = document.getElementById('backend-body');
-            if (dumpEl) dumpEl.textContent = JSON.stringify(obj, null, 2);
+        // Optional: debug dump if you have a panel with id="backend-body"
+        const dumpEl = document.getElementById('backend-body');
+        if (dumpEl) dumpEl.textContent = JSON.stringify(obj, null, 2);
 
-            // Extract positivity flag from either "message" or "Message"
-            let flag = (obj.hasOwnProperty('message') ? obj.message
-                : obj.hasOwnProperty('Message') ? obj.Message
-                    : undefined);
+        // Expecting: { "quote": { "id": ..., "quote": "...", "author": "..." } }
+        if (obj && typeof obj === 'object' && obj.quote) {
+            const q = obj.quote;
+            const quoteText = q.quote || q.text || q.quoteText || '';
+            const author = q.author || q.by || '';
 
-            let amount = obj.hasOwnProperty('amount') ? obj.amount
-                : obj.hasOwnProperty('Amount') ? obj.Amount
-                    : -1;
-            console.log("Received amount:", amount);
+            const qt = document.getElementById('quote-text');
+            const qa = document.getElementById('quote-author');
+            if (qt) qt.textContent = `"${quoteText}"`;
+            if (qa) qa.textContent = author ? `${author}` : '';
 
-            if (typeof flag === 'string') {
-                flag = flag.toLowerCase() === 'true';
-            } else if (typeof flag !== 'boolean') {
-                flag = undefined; // not a recognized flag
-            }
-
-            if (flag === true) {
-                el.textContent = '✅ Positive';
-                el.classList.add('status-true');
-                return;
-            }
-            if (flag === false) {
-                el.textContent = '❌ Not positive';
-                el.classList.add('status-false');
-                return;
-            }
-
-            // No positivity flag – just acknowledge
-            el.textContent = 'Response received';
-            el.classList.add(isError ? 'status-false' : 'muted');
+            el.textContent = 'Quote loaded';
+            el.classList.add('status-true');
             return;
         }
 
-        // Fallback: plain text
-        el.textContent = String(body);
+        // Fallback
+        el.textContent = isError ? 'Failed to load quote' : 'Response received';
         el.classList.add(isError ? 'status-false' : 'muted');
     }
 </script>
 
-
 <script>
-    // PUT example
-    function postQuote() {
-        const text = (document.getElementById('postQuoteInput').value || '').trim();
-        if (!text) {
-            updateStatus('Please enter a quote to POST.', true);
-            return;
-        }
-        try {
-            // Data-Type: "quote" | body: { quoteText }
-            sendCommand(HttpMethods.POST, 'quote', { quoteText: text });
-            updateStatus('POST sent. Awaiting backend result…', false);
-        } catch (e) {
-            console.error(e);
-            updateStatus('Failed to send POST.', true);
-        }
-    }
-
-    // GET example (no body)
-    function getQuote() {
-        try {
-            // Data-Type: "quote" | body: null
-            sendCommand(HttpMethods.GET, 'quote', null);
-            updateStatus('GET sent. Awaiting backend result…', false);
-        } catch (e) {
-            console.error(e);
-            updateStatus('Failed to send GET.', true);
-        }
-    }
-
-    // DELETE example (optional body)
-    function deleteQuote() {
-        const id = (document.getElementById('deleteIdInput').value || '').trim();
-        const withBody = document.getElementById('deleteWithBody').checked;
-
-        // If sending a body, include { id } – otherwise send null.
-        const body = withBody ? (id ? { id } : {}) : null;
-
-        try {
-            // Data-Type: "quote"
-            sendCommand(HttpMethods.DELETE, 'quote', body);
-            updateStatus('DELETE sent. Awaiting backend result…', false);
-        } catch (e) {
-            console.error(e);
-            updateStatus('Failed to send DELETE.', true);
-        }
-    }
-</script>
-
-<script>
-
+    /////////////////////////
+    ///// DO NOT CHANGE  ////
+    /////////////////////////
     const HttpMethods = Object.freeze({
         POST: 'POST',
         GET: 'GET',
@@ -338,13 +191,14 @@
     });
 
     // Generic function for other commands
-    function sendCommand(method, dataType, body) {
+    function sendCommand(method, dataType, body, sendUserData = false) {
         const command = {
             method: method,
             headers: {
                 'Data-Type': dataType
             },
-            body: body
+            body: body,
+            sendUserData: sendUserData
         };
         const jsonString = JSON.stringify(command);
 

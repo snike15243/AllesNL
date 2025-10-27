@@ -1,6 +1,6 @@
 services:
-  transportation-mini-app:
-    container_name: transportation-mini-app
+  custom-mini-app:
+    container_name: custom-mini-app
     build: .
     networks:
       - mini-apps

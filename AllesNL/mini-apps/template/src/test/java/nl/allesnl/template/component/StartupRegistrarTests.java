@@ -13,8 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Combined unit and integration tests for StartupRegistrar.
@@ -68,7 +67,7 @@ class StartupRegistrarTests {
             registrar.onApplicationReady();
 
             // then
-            verify(registrationState).setRegistrationId(-1);
+            verify(registrationState, times(10)).setRegistrationId(-1);
         }
     }
 

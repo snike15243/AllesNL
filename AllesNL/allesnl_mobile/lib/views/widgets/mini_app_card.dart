@@ -48,6 +48,7 @@ class MiniAppCard extends StatelessWidget {
           // --- DEVELOPMENT OVERRIDE: Uncomment the line below to load local dummy HTML ---
           //final String htmlContent = await rootBundle.loadString('assets/html/index.html');
 
+
           // --- PRODUCTION CODE ---
           //final user = User(id: 0, firstName: userName, lastName: userName, email: userEmail, phoneNumber: userPhoneNumber);
           //final String? htmlContent = await ApiService.getMiniAppByIdUser(miniApp.registrationId , user);
