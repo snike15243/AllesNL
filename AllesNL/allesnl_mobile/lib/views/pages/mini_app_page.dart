@@ -1,4 +1,5 @@
 import 'dart:convert'; // Import for jsonDecode
+import 'dart:ffi';
 import 'package:allesnl_mobile/views/api/api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,12 @@ class _MiniAppPageState extends State<MiniAppPage> {
       final Map<String, dynamic> command = jsonDecode(jsonString);
 
       final String method = command['method'] as String? ?? '';
+      final bool sendUserData = command['sendUserData'] as bool? ?? false;
       final Map<String, dynamic> body = command['body'] as Map<String, dynamic>? ?? {};
+      if(sendUserData){
+        body['userName'] = widget.userName;
+        body['userEmail'] = widget.userEmail;
+      }
       final Map<String, String> headers = (command['headers'] as Map<String, dynamic>? ?? {})
           .map((key, value) => MapEntry(key, value.toString()));
 

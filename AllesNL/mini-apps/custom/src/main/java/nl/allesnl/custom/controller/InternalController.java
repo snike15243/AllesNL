@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/internal")
@@ -57,9 +57,6 @@ class InternalController {
 
     @PostMapping("/html")
     ResponseEntity<Resource> getHtml(@RequestBody Map<String, String> user) {
-        for(String s : user.keySet()){
-            System.out.println(s);
-        }
         ClassPathResource resource = new ClassPathResource("static/index.html");
         if (!resource.exists()) {
             return ResponseEntity.notFound().build();
@@ -71,15 +68,36 @@ class InternalController {
     }
 
     @PostMapping("/client")
-    ResponseEntity<Map<String, Object>> postClientData(@RequestBody Map<String, Object> payload, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<Map<String, Object>> postClientData(
+            @RequestBody Map<String, Object> payload,
+            @RequestHeader HttpHeaders headers) {
 
-        final String dataTypeHeader = headers.getFirst("Data-Type");
-        Map<String, Object> map = new HashMap<>();
-        long millis = System.currentTimeMillis();
-        map.put("Message", String.valueOf(millis %2 == 0));
+        Map<String, Object> res = new HashMap<>();
+        String dataTypeHeader = headers.getFirst("Data-Type");
+        System.out.println(payload.get("email"));
+        switch (dataTypeHeader) {
+            case "ticket": {
+                Map<String, Object> ticketData = new HashMap<>();
+                ticketData.put("email", payload.get("userEmail"));
+                ticketData.put("time", LocalTime.now().toString());
+                ticketData.put("origin", payload.get("origin"));
+                ticketData.put("destination", payload.get("destination"));
 
-        return ResponseEntity.ok(map);
+                res.put("success", true);
+                res.put("message", "Ticket created successfully");
+                res.put("data", ticketData);
+                break;
+            }
+
+            default:
+                res.put("success", false);
+                res.put("message", "Unknown Data-Type header: " + dataTypeHeader);
+                break;
+        }
+
+        return ResponseEntity.ok(res);
     }
+
 
     @GetMapping("/client")
     ResponseEntity<Map<String, Object>> getClientData(@RequestHeader HttpHeaders headers) {
